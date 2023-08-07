@@ -1,0 +1,14 @@
+{
+    "python.linting.enabled":true,
+    "python.linting.pylintEnabled":true,
+    "configurations": [
+        {
+          "name": "Python: Current File",
+          "type": "python",
+          "request": "launch",
+          "program": "${file}",
+          "console": "integratedTerminal",
+          "python": "${workspaceFolder}/supermarket/bin/python"
+        }
+      ]
+}
