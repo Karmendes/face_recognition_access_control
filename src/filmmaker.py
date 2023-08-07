@@ -10,16 +10,10 @@ class FilmMaker:
         self.connector = connector
 
     def run(self):
-
         while True:
-            try:## Grab the image
-                frame = self.video_capture.capture_from_camera()
-                processed_frame = self.image_processor.process_frame(frame)
-                self.connector.push_msg(processed_frame)
-            except:
-                print('My Bad')
-                break
-
+            frame = self.video_capture.capture_from_camera()
+            processed_frame = self.image_processor.process_frame(frame)
+            self.connector.push_msg(processed_frame)
 if __name__ == '__main__':
     maker = FilmMaker(VideoCaptor(),ImageProcessor(),PubSubConnect())
     maker.run()

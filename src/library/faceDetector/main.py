@@ -3,5 +3,6 @@ class FaceDetector:
         pass
     def load_model(self):
         print('Loading model to detect face')
-    def detect_face(self):
+    def detect_face(self,frame):
         print('Detecting Face')
+        return []
