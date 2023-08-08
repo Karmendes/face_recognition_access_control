@@ -11,6 +11,6 @@ class RabbitConnector(PubSubConnect):
     def push_msg(self,data):
         self.channel.basic_publish(exchange='', routing_key=self.queue_name, body=data)
     def pull_msg(self):
-        pass
+        return self.channel.basic_get(queue = self.queue_name)
     def close(self):
         self.connection.close()
