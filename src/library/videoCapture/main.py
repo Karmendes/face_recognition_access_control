@@ -1,8 +1,8 @@
+from abc import ABC,abstractmethod
 
-
-class VideoCaptor:
+class VideoCaptor(ABC):
     def __init__(self):
         pass
-
-    def capture_from_camera(self):
-        print('Init collect frames from camera')
+    @abstractmethod
+    def capture(self):
+        pass
