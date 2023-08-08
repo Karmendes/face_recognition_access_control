@@ -1,8 +1,10 @@
-class FaceDetector:
+
+from abc import ABC,abstractmethod
+
+class FaceDetector(ABC):
     def __init__(self):
         pass
     def load_model(self):
-        print('Loading model to detect face')
+        pass
     def detect_face(self,frame):
-        print('Detecting Face')
-        return []
+        pass
