@@ -1,6 +1,7 @@
-from library.videoCapture.main import VideoCaptor
-from library.imageProcess.main import ImageProcessor
-from library.pubSubConnect.main import PubSubConnect
+from library.videoCapture.opencv_capture import CaptorOpenCV
+from library.imageProcess.main import FrameProcessorToFilmMaker
+from library.pubSubConnect.connector_rabbitmq import RabbitConnector
+from time import sleep
 
 
 class FilmMaker:
@@ -11,9 +12,15 @@ class FilmMaker:
 
     def run(self):
         while True:
-            frame = self.video_capture.capture_from_camera()
-            processed_frame = self.image_processor.process_frame(frame)
-            self.connector.push_msg(processed_frame)
+            try:
+                _,frame = self.video_capture.capture()
+                processed_frame = self.image_processor.run(frame)
+                self.connector.push_msg(processed_frame)
+                print('Frame enviado para fila')
+                sleep(1)
+            except KeyboardInterrupt:
+                self.connector.close()
+                self.video_capture.quit()
 if __name__ == '__main__':
-    maker = FilmMaker(VideoCaptor(),ImageProcessor(),PubSubConnect())
+    maker = FilmMaker(CaptorOpenCV(),FrameProcessorToFilmMaker(),RabbitConnector())
     maker.run()
