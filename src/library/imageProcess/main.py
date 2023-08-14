@@ -1,9 +1,14 @@
 import cv2
 import numpy as np
 
+# Interface
+
 class FrameProcessorStrategy:
     def process(self, frame):
         pass
+
+
+## Basic funtions
 
 class BufferToArrayStrategy(FrameProcessorStrategy):
     def process(self, frame):
@@ -17,6 +22,10 @@ class BGRToGray(FrameProcessorStrategy):
     def process(self, frame):
         return cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
+class GrayToBGR(FrameProcessorStrategy):
+    def process(self, gray_frame):
+        return cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)
+
 class FrameToBufferStrategy(FrameProcessorStrategy):
     def process(self, frame):
         _, buffer = cv2.imencode('.jpg', frame)
@@ -26,12 +35,21 @@ class BufferToBytesStrategy(FrameProcessorStrategy):
     def process(self, frame):
         return frame.tobytes()
 
-class CropFrame(FrameProcessorStrategy):
-    def __init__(self, coord):
-        self.coord = coord
+
+## Personalized functions
+
+class EncodeFrame(FrameProcessorStrategy):
     def process(self, frame):
-        X, Y, W, H = self.coord
-        return frame[Y:Y+H, X:X+W]
+        frame = FrameToBufferStrategy().process(frame)
+        return BufferToBytesStrategy().process(frame)
+
+class DecodeFrame(FrameProcessorStrategy):
+    def process(self, frame):
+        frame = BufferToArrayStrategy().process(frame)
+        return ArrayToFrameStrategy().process(frame)
+
+
+## Aggregate Strategys
 
 class FrameProcessor:
     def __init__(self):
@@ -46,19 +64,26 @@ class FrameProcessor:
 
 ################################################################### directors
 
+
 class FrameProcessorToFilmMaker:
     def __init__(self):
         self.frame_processor = FrameProcessor()
-        self.frame_processor.add_strategy(FrameToBufferStrategy())
-        self.frame_processor.add_strategy(BufferToBytesStrategy())
+        self.frame_processor.add_strategy(EncodeFrame())
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
 
 class FrameProcessorToFaceDetector:
     def __init__(self):
         self.frame_processor = FrameProcessor()
-        self.frame_processor.add_strategy(BufferToArrayStrategy())
-        self.frame_processor.add_strategy(ArrayToFrameStrategy())
+        self.frame_processor.add_strategy(DecodeFrame())
         self.frame_processor.add_strategy(BGRToGray())
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
+    
+class FrameProcessorToFaceRecognition:
+    def __init__(self):
+        self.frame_processor = FrameProcessor()
+        self.frame_processor.add_strategy(EncodeFrame())
+    def run(self,frame):
+        return self.frame_processor.process_frame(frame)
+
