@@ -86,4 +86,5 @@ class FrameProcessorToFaceRecognition:
         self.frame_processor.add_strategy(EncodeFrame())
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
+    
 

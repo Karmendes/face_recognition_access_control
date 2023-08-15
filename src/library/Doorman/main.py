@@ -7,13 +7,9 @@ import shutil
 
 class Doorman:
     def __init__(self,trustee):
-        self.face = None
         self.data_entrance = None
         self.__trustee = trustee
         self.state_entrance = None
-    
-    def receive_face(self,face):
-        self.face = face
 
     def check_active_entrance(self,path = 'src/data/active'):
         self.state_entrance = (len(os.listdir(path)) != 0)
@@ -50,7 +46,7 @@ class Doorman:
         return self.__trustee.apply_rule(self.data_entrance['steps'])
 
     def open_door(self):
-        pass
+        print('Opening the door')
 
     def mark_status(self,status:bool):
         self.data_entrance['status'] = status
