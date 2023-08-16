@@ -4,6 +4,7 @@ from datetime import datetime
 from time import time
 import json
 import shutil
+from library.logger.main import Logger
 
 class Doorman:
     def __init__(self,trustee):
@@ -11,7 +12,7 @@ class Doorman:
         self.__trustee = trustee
         self.state_entrance = None
 
-    def check_active_entrance(self,path = 'src/data/active'):
+    def check_active_entrance(self,path = 'data/active'):
         self.state_entrance = (len(os.listdir(path)) != 0)
 
     def create_new_entrance(self):
@@ -26,17 +27,17 @@ class Doorman:
 
             }
             self.state_entrance = True
-            print('Nova Entrada')
+            Logger.emit('New entrance')
     
-    def save_data_entrance(self,path = 'src/data/active/'):
+    def save_data_entrance(self,path = 'data/active/'):
         with open(path + self.data_entrance['id'] + '.json', 'w') as json_file:
             json.dump(self.data_entrance, json_file)
 
-    def finish_entrance(self,path_active = 'src/data/active/',path_inactive = 'src/data/inactive/'):
+    def finish_entrance(self,path_active = 'data/active/',path_inactive = 'data/inactive/'):
         self.data_entrance['dh_end'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_data_entrance(path_active)
         shutil.move(path_active + self.data_entrance['id'] + '.json', path_inactive)
-        print('Entrada Finalizada')
+        Logger.emit('Exiting entrance')
 
     def check_time_to_entrance(self,duration = 50):
         return time() - self.data_entrance['dh_start_time'] > duration
@@ -48,7 +49,7 @@ class Doorman:
         return self.__trustee.apply_rule(self.data_entrance['steps'])
 
     def open_door(self):
-        print('Opening the door')
+        Logger.emit('Opening the door')
 
     def mark_status(self,status:bool):
         self.data_entrance['status'] = status
