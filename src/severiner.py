@@ -26,7 +26,8 @@ class Severiner:
             name = self.recognitor.recognize_face(frame_face,self.know_encodings)
             print(f'Face Recognizer {name}')
             # Send for pubsub
-            self.connector_to.push_msg(name)
+            if name != 'Unknown':
+                self.connector_to.push_msg(name)
             self.connector_from.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 
 if __name__ == '__main__':
