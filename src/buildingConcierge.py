@@ -12,8 +12,9 @@ class BuildingConcierge:
         # Face recognition
         while True:
             # Receiving the face
-            method_frame, _, msg = self.connector.pull_msg()
-            response_steps = ("Luna",0.8)
+            method_frame, _, body = self.connector.pull_msg()
+            if body is None:
+                continue
             # Check entrance is active
             self.doorman.check_active_entrance()
             # Create new entrance if necessary
@@ -28,7 +29,7 @@ class BuildingConcierge:
             else:
                 print('Limit not passed')
             # Register steps
-            self.doorman.register_steps_entrance(response_steps)
+            self.doorman.register_steps_entrance(body.decode('utf-8'))
             # Apply Rule
             if self.doorman.check_entry_rule():
                 self.doorman.open_door()
@@ -38,6 +39,6 @@ class BuildingConcierge:
                 print('Not able to open yet')
 
 if __name__ == '__main__':
-    concierge = BuildingConcierge(Doorman(VotationTrustee(3,0.3)),
-                                  RabbitConnector(queue_name='headcut_to_concierge'))
+    concierge = BuildingConcierge(Doorman(VotationTrustee(7,0.3)),
+                                  RabbitConnector(queue_name='FaceRecognition_to_Concierge'))
     concierge.run()

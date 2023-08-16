@@ -26,6 +26,7 @@ class Doorman:
 
             }
             self.state_entrance = True
+            print('Nova Entrada')
     
     def save_data_entrance(self,path = 'src/data/active/'):
         with open(path + self.data_entrance['id'] + '.json', 'w') as json_file:
@@ -35,6 +36,7 @@ class Doorman:
         self.data_entrance['dh_end'] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
         self.save_data_entrance(path_active)
         shutil.move(path_active + self.data_entrance['id'] + '.json', path_inactive)
+        print('Entrada Finalizada')
 
     def check_time_to_entrance(self,duration = 50):
         return time() - self.data_entrance['dh_start_time'] > duration
