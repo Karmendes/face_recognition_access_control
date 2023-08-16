@@ -1,5 +1,6 @@
 
 from library.Doorman.Trustee.main import Trustee
+from library.logger.main import Logger
 
 class VotationTrustee(Trustee):
     def __init__(self,size:int,threshold:float):
@@ -24,7 +25,11 @@ class VotationTrustee(Trustee):
         # Get the winner
         winner = max(props, key=props.get)
         # check rule
-        return props[winner] > self.threshold
+        if props[winner] > self.threshold:
+            Logger.emit(f'{winner}, the door will be open')
+            return True
+        else:
+            False
 
 
         
