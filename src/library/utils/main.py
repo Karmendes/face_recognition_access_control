@@ -1,5 +1,6 @@
 import os
 import pickle
+import cv2
 
 def biggest_area(coords):
     biggest_area = 0
@@ -30,10 +31,23 @@ def save_encodings(encodings,names,name):
     f.write(pickle.dumps(data))
     f.close()
 
+def save_images(frames,name):
+    [cv2.imwrite(f'images/{name}/{x}.png', y) for x,y in enumerate(frames)]
+
+
+def list_files_with_paths_in_subdirectories(directory):
+    file_paths = []
+    for root_folder, subfolders, files in os.walk(directory):
+        for file in files:
+            file_path = os.path.join(root_folder, file)  
+            file_paths.append(file_path)
+    return file_paths
+
 def open_encodings():
     data = {'encodings':[],'names':[]}
-    files = [f for f in os.listdir('users') if os.path.isfile(os.path.join('users', f))]
+    files = list_files_with_paths_in_subdirectories('users')
     for file in files:
-        path = os.path.join('users', file)
-        data.extends(pickle.loads(open(path, "rb").read()))
+        pickle_data = pickle.loads(open(file, "rb").read())
+        data['encodings'].extend(pickle_data['encodings'])
+        data['names'].extend(pickle_data['names'])
     return data

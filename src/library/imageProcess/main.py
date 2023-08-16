@@ -26,6 +26,14 @@ class GrayToBGR(FrameProcessorStrategy):
     def process(self, gray_frame):
         return cv2.cvtColor(gray_frame, cv2.COLOR_GRAY2BGR)
 
+class GrayToRGB(FrameProcessorStrategy):
+    def process(self, frame):
+        return cv2.cvtColor(frame,cv2.COLOR_GRAY2RGB)
+
+class BGRToRGB(FrameProcessorStrategy):
+    def process(self, frame):
+        return cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+
 class FrameToBufferStrategy(FrameProcessorStrategy):
     def process(self, frame):
         _, buffer = cv2.imencode('.jpg', frame)
@@ -65,25 +73,42 @@ class FrameProcessor:
 ################################################################### directors
 
 
-class FrameProcessorToFilmMaker:
+class FrameEncode:
     def __init__(self):
         self.frame_processor = FrameProcessor()
         self.frame_processor.add_strategy(EncodeFrame())
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
 
-class FrameProcessorToFaceDetector:
+class FrameDecode:
+    def __init__(self):
+        self.frame_processor = FrameProcessor()
+        self.frame_processor.add_strategy(DecodeFrame())
+    def run(self,frame):
+        return self.frame_processor.process_frame(frame)
+
+class FrameDecodeBGRToGray:
     def __init__(self):
         self.frame_processor = FrameProcessor()
         self.frame_processor.add_strategy(DecodeFrame())
         self.frame_processor.add_strategy(BGRToGray())
+        
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
     
-class FrameProcessorToFaceRecognition:
+class FrameGrayToBGREncode:
     def __init__(self):
         self.frame_processor = FrameProcessor()
+        self.frame_processor.add_strategy(GrayToBGR())
         self.frame_processor.add_strategy(EncodeFrame())
+    def run(self,frame):
+        return self.frame_processor.process_frame(frame)
+    
+class FrameDecodeBGRToRGB:
+    def __init__(self):
+        self.frame_processor = FrameProcessor()
+        self.frame_processor.add_strategy(DecodeFrame())
+        self.frame_processor.add_strategy(BGRToRGB())
     def run(self,frame):
         return self.frame_processor.process_frame(frame)
     

@@ -11,6 +11,7 @@ class Severiner:
         self.recognitor = recognitor
         self.encoder = encoder
         self.decoder = decoder
+        self.know_encodings = open_encodings()
 
     def run(self):
         while True:
@@ -22,16 +23,16 @@ class Severiner:
             # Decode Frame
             frame_face = self.decoder.process(body)
             # Recognize the face
-            name = self.recognitor.recognize_face(frame_face)
+            name = self.recognitor.recognize_face(frame_face,self.know_encodings)
             print(f'Face Recognizer {name}')
             # Send for pubsub
             self.connector_to.push_msg(name)
-            #self.connector_to.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
+            self.connector_from.channel.basic_ack(delivery_tag=method_frame.delivery_tag)
 
 if __name__ == '__main__':
     severiner = Severiner(RabbitConnector(queue_name='HeadCut_to_FaceRecognition'),
                           RabbitConnector(queue_name='FaceRecognition_to_Concierge'),
-                          Recognitor(Comparer(),open_encodings()),
+                          Recognitor(Comparer()),
                           DecodeFrame(),
                           EncodeFrame())
     severiner.run()
