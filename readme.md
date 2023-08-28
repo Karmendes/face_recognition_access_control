@@ -2,13 +2,13 @@
 
 This is a facial recognition project developed for access control purposes, utilizing a series of interconnected modules. The system can capture camera images, identify faces, perform facial recognition, apply entry rules, record access events, and even control automatic door opening. Communication between modules is facilitated using RabbitMQ, and the entire project is implemented in Python.
 
-### Architeture
+## Architeture
 
-#### Register new encodings
+### Register new encodings
 
 ![](arqui_registry.png)
 
-#### Prod System
+### Prod System
 
 ![](arqui_system.png)
 
@@ -20,7 +20,7 @@ The project consists of the following modules:
 
 This module is responsible for capturing camera feeds, obtaining frames for further processing.
 
-## headcut 
+## Headcut 
 
 The module performs face detection on the frames captured by the camera, determining the presence of faces.
 
