@@ -6,11 +6,11 @@ This is a facial recognition project developed for access control purposes, util
 
 #### Register new encodings
 
-![](archi_registry.png)
+![](arqui_registry.png)
 
 #### Prod System
 
-![](archi_system.png)
+![](arqui_system.png)
 
 ## Architecture Components
 
